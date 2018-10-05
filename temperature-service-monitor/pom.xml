@@ -14,12 +14,22 @@
 	<artifactId>temperature-service-monitor</artifactId>
 	<packaging>jar</packaging>
 
+	<properties>
+		<cache-api.version>1.0.0</cache-api.version>
+	</properties>
+
 	<dependencies>
 
 		<dependency>
 			<groupId>io.pivotal.apps</groupId>
 			<artifactId>temperature-service-core</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+			<version>${cache-api.version}</version>
 		</dependency>
 
 		<dependency>
