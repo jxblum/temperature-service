@@ -14,11 +14,21 @@
 	<artifactId>temperature-service-core</artifactId>
 	<packaging>jar</packaging>
 
+	<properties>
+		<jansi.version>1.17.1</jansi.version>
+	</properties>
+
 	<dependencies>
 
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-geode</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.fusesource.jansi</groupId>
+			<artifactId>jansi</artifactId>
+			<version>${jansi.version}</version>
 		</dependency>
 
 	</dependencies>
