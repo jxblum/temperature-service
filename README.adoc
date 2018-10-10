@@ -1,0 +1,14 @@
+
+= Temperature Monitoring and Sensing Application Services
+
+This Repository consists of 3 Spring Boot applications.
+
+1. The `temperature-service-server` is a Spring Boot application used to configure and bootstrap Apache Geode
+servers managing the temperature service backend and data store.
+
+2. The temperature-service-sensor` is a Spring Boot application that records temperatures from sensors,
+like thermometers and other instruments.
+
+3. The `temperature-service-monitor` is a Spring Boot application used to monitor (and optionally act on)
+temperature readings originating from temperature sensors.  Actions can be performed based on certain temperature
+changes, events and thresholds.
