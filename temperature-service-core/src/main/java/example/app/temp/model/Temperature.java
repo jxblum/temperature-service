@@ -3,6 +3,7 @@ package example.app.temp.model;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.data.annotation.Transient;
 import org.springframework.util.Assert;
 
@@ -50,18 +51,7 @@ public class Temperature {
 
 	@Override
 	public String toString() {
-		return String.format("%1$s %2$s", getMeasurementAsString(), getScale());
-	}
-
-	private String getMeasurementAsString() {
-
-		String value = String.valueOf(getMeasurement());
-
-		while (value.length() <= 6) {
-			value = " ".concat(value);
-		}
-
-		return value;
+		return String.format("%1$s %2$s", StringUtils.leftPad(String.valueOf(getMeasurement()), 6), getScale());
 	}
 
 	public enum Scale {
