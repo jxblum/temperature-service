@@ -26,8 +26,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.gemfire.cache.config.EnableGemfireCaching;
 import org.springframework.data.gemfire.config.annotation.ClientCacheApplication;
-import org.springframework.data.gemfire.config.annotation.EnableCachingDefinedRegions;
 import org.springframework.data.gemfire.config.annotation.EnableClusterConfiguration;
+import org.springframework.data.gemfire.config.annotation.EnableClusterDefinedRegions;
 import org.springframework.data.gemfire.config.annotation.EnableEntityDefinedRegions;
 import org.springframework.data.gemfire.config.annotation.EnablePdx;
 import org.springframework.data.gemfire.repository.config.EnableGemfireRepositories;
@@ -49,8 +49,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @SpringBootApplication
 @ClientCacheApplication(name = "TemperatureSensorApplication")
-@EnableCachingDefinedRegions
 @EnableClusterConfiguration
+@EnableClusterDefinedRegions
 @EnableEntityDefinedRegions(basePackageClasses = TemperatureReading.class)
 @EnableGemfireCaching
 @EnableGemfireRepositories(basePackageClasses = TemperatureReadingRepository.class)
