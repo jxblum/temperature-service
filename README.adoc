@@ -1,14 +1,119 @@
+[[about]]
+= Temperature Monitoring and Sensing Application Service
 
-= Temperature Monitoring and Sensing Application Services
+The Temperature Service application is a temperature sensing and monitoring service composed of 3 Spring Boot
+applications managing the backend, temperature sensors and temperature monitors, respectively.
+
+This example simulates a real world, Internet of Things (IoT) Use Case (UC).  1 application of this service might
+include monitoring the world's oceans for sudden/dramatic temperature changes that could be detrimental to
+the environment. Another application might be to monitor (commercial) jet engine temperatures while in operation,
+and so on.
+
+
+[[modules]]
+== Modules
 
 This Repository consists of 3 Spring Boot applications.
 
 1. The `temperature-service-server` is a Spring Boot application used to configure and bootstrap Apache Geode
 servers managing the temperature service backend and data store.
 
-2. The temperature-service-sensor` is a Spring Boot application that records temperatures from sensors,
-like thermometers and other instruments.
+2. The `temperature-service-sensor` is a Spring Boot application that records temperatures from sensors,
+like thermometers and other instruments.  Currently, the example generates temperatures readings using
+an endless, random stream of ints.
 
 3. The `temperature-service-monitor` is a Spring Boot application used to monitor (and optionally act on)
 temperature readings originating from temperature sensors.  Actions can be performed based on certain temperature
-changes, events and thresholds.
+changes, events or thresholds.  Currently, the temperature monitors only log the temperature readings/events.
+
+
+[[organization]]
+== Organization
+
+The Repository is organized into 3 main branches:
+
+1. `master` - starting point allowing users to build this example from scratch; only includes the
+`example.app.temp.model.Temperature` application domain model class.
+
+2. `using-spring-data` - complete, runnable example using _Spring Data for Apache Geode_ to configure and run the
+Temperature Service application.  While _Spring Boot_ is present, the example is not using the convenience and power of
+https://github.com/spring-projects/spring-boot-data-geode[_Spring Boot for Apache Geode_].  (See `using-spring-boot`)
+
+3. `using-spring-boot` - same, complete, runnable example using https://github.com/spring-projects/spring-boot-data-geode[_Spring Boot for Apache Geode_]
+instead of https://github.com/spring-projects/spring-data-geode[_Spring Data for Apache Geode_].
+_Spring Boot for Apache Geode_ provides additional power and convenience (e.g. _convention over configuration_ with
+`auto-configuration`) above and beyond simply _Spring Data for Apache Geode_ that makes building Spring
+applications powered by Apache Geode even *easier* and *quicker*.  This branch showcases these key differences
+as well as the convenience/power provided by _Spring Boot for Apache Geode_ vs _Spring Data for Apache Geode_, OOTB.
+
+
+[[features]]
+== Features
+
+Perhaps, the most important goal of the Temperature Service application is to provide some guidance around how to enable
+a legacy, enterprise Java application as a *Cloud-Native* application in a cloud environment (e.g. GCP, Azure, AWS), and
+what does this specifically mean for *data*? How must my data architecture evolve to operate reliably in cloud context?
+
+Until now, much of the focus has been on applications, with https://12factor.net/[The 12-Factor Apps].  But, this says
+very little about our data (there is a small blurb in https://12factor.net/backing-services[IV. Backing services]).
+
+Additionally, by adopting a Microservices architecture, applications should own their data source, that each
+Microservice should have an individual, properly encapsulated data source.
+
+Great!  But, how do you refactor an existing, proven enterprise application architecture without a complete re-write?
+How do you protect your existing investment and migrate to the cloud in a controlled way?
+
+It is not as simple as just dropping your enterprise application into the cloud and expecting that everything
+is just suddenly going to be better.  Nor is it as simple as just chopping the monolith up into smaller Microservices.
+
+Therefore, as you journey towards the cloud, the questions concerning data become what data access patterns emerge
+and how do I effectively leverage them in my existing application architecture inside a cloud context and achieve
+a much improved user experience and add value (collectively, the bar on Quality of Service (QoS) & our ROI).
+
+You must carefully understand what are the correct technologies and patterns that need to be applied in a cloud context,
+and how.
+
+The features presented here show how you might go about integrating some of the cloud-native, data access patterns
+implemented by Apache Geode, like *caching*, *distributed compute* (Functions) and *event streaming* (CQ)
+into your existing applications.  We will leverage _Spring_ as our technology of choice to enable these patterns
+using Apache Geode.
+
+By leveraging these features and patterns, you can slowly shift the responsibilities from your existing data
+architecture/solutions (e.g. perhaps implemented with an RDBMS) without completely throwing your existing investment
+away and starting over, a very costly endeavor to be sure.
+
+Our feature set for this example will include:
+
+1. _Spring Data Repositories_ and _Spring Data for Apache Geode's_ implementation showing how Apache Geode can
+be used in _System of Record_ (SoR) _Use Cases_ (UC).
+
+2. A far simpler UC for Apache Geode in a Spring context is how to leverage Apache Geode as a "_caching provider_"
+in https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#cache[Spring's Cache Abstraction].
+Caching can be used in cases where your application services make potentially expensive calls to a backend data store (e.g. RDBMS)
+or perhaps even a remote Microservice (e.g. Google Maps API for geocoding), which incurs latency or resource costs.
+Implementing the https://content.pivotal.io/blog/an-introduction-to-look-aside-vs-inline-caching-patterns[**Look-Aside Caching**]
+pattern by wrapping your application services with caching logic is an effective way to integrate Apache Geode
+in a very non-invasive manner, simply by leveraging _Spring's Cache Abstraction_.
+
+3. In the Temperature Service application's case, it uses an Apache Geode Function execution to compute the average
+temperature on a periodic basis, which we might expect to be a (more) "complex" and "expensive" operation, since it
+goes out over the network across the cluster.  However, perhaps our frequency to know the average temperature does not
+need to be the most up-to-date and accurate value, so we can wrap the average temperature calculation (a Function
+execution) with _Spring's_ caching interceptor described in #2 above.  Still, this Function execution (computing
+the average temperature) serves another purpose, to demonstrate the power of Apache Geode's distributed compute
+functionality using its Map-Reduce-style, aggregation capabilities.  That is, rather then bring the data to the logic,
+let's send the logic to where the data lives, which can by highly optimized especially when the data is partitioned
+(or sharded) across the cluster thereby distributing that load.
+
+4. Finally, we leverage another really power feature of Apache Geode in this UC, event streaming.  Often times,
+we will see polling as means to find out whether something has changed in the state of our application.
+With Apache Geode, you can register Continuous Queries (CQ) to express interests in certain events.  That interests
+are expressed as a predicate in an OQL query.  OQL stands for Object Query Language and is not unlike SQL.  There
+are many similarities but also some verfy fundamental and important differences.  The key part to know in this case
+(for now) is that you can easily express interests in data based on a query predicate, which is extremely powerful.
+Apache Geode takes care of notifying interested clients when the data changes and it matches the CQ OQL query predicate.
+Spring makes configuring, registering and handling CQ events very simple.  In our Temperature Service application,
+we register 2 CQs, 1 to receive events when the temperatures readings are too hot (boiling) and another when
+the temperature readings are too cold (freezing).
+
+More details will be described in each of the individual modules of this application.
