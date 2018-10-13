@@ -25,8 +25,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.gemfire.config.annotation.CacheServerApplication;
 import org.springframework.data.gemfire.config.annotation.EnableLocator;
 import org.springframework.data.gemfire.config.annotation.EnableManager;
-import org.springframework.data.gemfire.config.annotation.EnablePdx;
-import org.springframework.data.gemfire.function.config.EnableGemfireFunctions;
 
 import example.app.temp.function.impl.AverageTemperatureFunction;
 import example.app.temp.server.config.GeodeConfiguration;
@@ -40,8 +38,6 @@ import example.app.temp.server.config.GeodeConfiguration;
 @SpringBootApplication
 @CacheServerApplication(name = "TemperatureServiceServer", locators = "localhost[10334]", port = 0)
 @ComponentScan(basePackageClasses = AverageTemperatureFunction.class)
-@EnableGemfireFunctions
-@EnablePdx
 @Import(GeodeConfiguration.class)
 @SuppressWarnings("unused")
 public class TemperatureServerApplication {

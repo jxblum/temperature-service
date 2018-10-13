@@ -44,17 +44,17 @@
 			</exclusions>
 		</dependency>
 
+<!--
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-geode</artifactId>
 		</dependency>
+-->
 
-<!--
 		<dependency>
 			<groupId>org.springframework.geode</groupId>
 			<artifactId>spring-geode-starter</artifactId>
 		</dependency>
--->
 
 		<dependency>
 			<groupId>org.fusesource.jansi</groupId>

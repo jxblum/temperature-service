@@ -21,22 +21,14 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.gemfire.cache.config.EnableGemfireCaching;
-import org.springframework.data.gemfire.config.annotation.ClientCacheApplication;
 import org.springframework.data.gemfire.config.annotation.EnableCachingDefinedRegions;
 import org.springframework.data.gemfire.config.annotation.EnableClusterConfiguration;
-import org.springframework.data.gemfire.config.annotation.EnableContinuousQueries;
 import org.springframework.data.gemfire.config.annotation.EnableEntityDefinedRegions;
-import org.springframework.data.gemfire.config.annotation.EnablePdx;
-import org.springframework.data.gemfire.function.config.EnableGemfireFunctionExecutions;
-import org.springframework.data.gemfire.repository.config.EnableGemfireRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import example.app.temp.event.TemperatureEventHandler;
 import example.app.temp.event.support.LoggingTemperatureEventHandler;
-import example.app.temp.function.exe.AverageTemperatureFunctionExecution;
 import example.app.temp.model.TemperatureReading;
-import example.app.temp.repo.TemperatureReadingRepository;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -46,15 +38,9 @@ import lombok.extern.slf4j.Slf4j;
  * @since 1.0.0
  */
 @SpringBootApplication
-@ClientCacheApplication(subscriptionEnabled = true)
 @EnableCachingDefinedRegions
 @EnableClusterConfiguration
-@EnableContinuousQueries
 @EnableEntityDefinedRegions(basePackageClasses = TemperatureReading.class)
-@EnableGemfireCaching
-@EnableGemfireFunctionExecutions(basePackageClasses = AverageTemperatureFunctionExecution.class)
-@EnableGemfireRepositories(basePackageClasses = TemperatureReadingRepository.class)
-@EnablePdx
 @EnableScheduling
 @Slf4j
 @SuppressWarnings("unused")
