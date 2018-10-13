@@ -28,7 +28,7 @@
   <description>
     Simple example Spring Boot application to manage temperature sensors and monitor temperature readings.
   </description>
-  <url></url>
+  <url>https://github.com/jxblum/temperature-service</url>
 
   <licenses>
     <license>
