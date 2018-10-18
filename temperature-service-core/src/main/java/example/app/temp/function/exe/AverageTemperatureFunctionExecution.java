@@ -15,6 +15,8 @@
  */
 package example.app.temp.function.exe;
 
+import java.util.Optional;
+
 import org.springframework.data.gemfire.function.annotation.OnRegion;
 
 /**
@@ -23,10 +25,10 @@ import org.springframework.data.gemfire.function.annotation.OnRegion;
  * @author John Blum
  * @since 1.0.0
  */
-@OnRegion(region = "TemperatureReadings")
+@OnRegion(region = "TemperatureReadings", resultCollector = "AverageTemperatureResultCollector")
 @SuppressWarnings("unused")
 public interface AverageTemperatureFunctionExecution {
 
-	Object averageTemperature();
+	Iterable<Optional<Double>> averageTemperature();
 
 }

@@ -26,6 +26,7 @@ import org.springframework.util.Assert;
 
 import example.app.temp.function.exe.AverageTemperatureFunctionExecution;
 import example.app.temp.function.support.AverageTemperatureFunctionUtils;
+import example.app.temp.model.Temperature;
 import example.app.temp.model.TemperatureReading;
 import example.app.temp.repo.TemperatureReadingRepository;
 
@@ -86,9 +87,10 @@ public class TemperatureService {
 
 		this.cacheMiss.set(true);
 
-		Object averageTemperature = getAverageTemperatureFunction().averageTemperature();
+		Optional<Double> averageTemperature =
+			AverageTemperatureFunctionUtils.extract(getAverageTemperatureFunction().averageTemperature());
 
-		return AverageTemperatureFunctionUtils.asTemperatureReading(averageTemperature);
+		return TemperatureReading.of(Temperature.of(averageTemperature.orElse(0.0d)));
 	}
 
 	public Optional<TemperatureReading> load(String id) {

@@ -16,7 +16,7 @@
 package example.app.temp.function.impl;
 
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.gemfire.function.annotation.GemfireFunction;
 import org.springframework.data.gemfire.function.annotation.RegionData;
@@ -38,11 +38,8 @@ public class AverageTemperatureFunction {
 	@GemfireFunction
 	public Double averageTemperature(@RegionData Map<String, TemperatureReading> temperatureReadings) {
 
-		Optional<Double> temperatureSum = temperatureReadings.values().stream()
+		return temperatureReadings.values().stream()
 			.map(TemperatureReading::getTemperature)
-			.map(Temperature::getMeasurement)
-			.reduce((temperatureOne, temperatureTwo) -> temperatureOne + temperatureTwo);
-
-		return temperatureSum.map(sum -> sum / temperatureReadings.size()).orElse(0.0d);
+			.collect(Collectors.averagingDouble(Temperature::getMeasurement));
 	}
 }

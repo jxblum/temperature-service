@@ -15,8 +15,10 @@
  */
 package example.app.temp.function.support;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.cp.elements.lang.MathUtils;
 
@@ -29,6 +31,7 @@ import example.app.temp.model.TemperatureReading;
  * @author John Blum
  * @since 1.0.0
  */
+@SuppressWarnings("unused")
 public abstract class AverageTemperatureFunctionUtils {
 
 	public static Temperature asTemperature(Object functionReturnValue) {
@@ -39,21 +42,28 @@ public abstract class AverageTemperatureFunctionUtils {
 		return TemperatureReading.of(asTemperature(functionReturnValue));
 	}
 
+	public static Optional<Double> extract(Iterable<Optional<Double>> functionResult) {
+		return isNotEmpty(functionResult) ? functionResult.iterator().next() : Optional.empty();
+	}
+
+	private static boolean isNotEmpty(Iterable<?> iterable) {
+		return iterable != null && iterable.iterator().hasNext();
+	}
+
 	@SuppressWarnings("unchecked")
 	public static double unwrap(Object functionReturnValue) {
 
-		if (functionReturnValue instanceof List) {
+		if (functionReturnValue instanceof Iterable) {
 
-			List<Double> temperatures = (List<Double>) functionReturnValue;
+			Iterable<Double> temperatures = (Iterable<Double>) functionReturnValue;
 
-			double temperatureSum = temperatures.stream()
+			double averageTemperature = StreamSupport.stream(temperatures.spliterator(), false)
 				.filter(Objects::nonNull)
-				.reduce((temperatureOne, temperatureTwo) -> temperatureOne + temperatureTwo)
-				.orElse(0.0d);
+				.collect(Collectors.averagingDouble(temperature -> temperature));
 
-			temperatureSum = MathUtils.roundToNearestTenth(temperatureSum);
+			averageTemperature = MathUtils.roundToNearestTenth(averageTemperature);
 
-			functionReturnValue = temperatureSum / temperatures.size();
+			functionReturnValue = averageTemperature;
 		}
 
 		return (double) functionReturnValue;
