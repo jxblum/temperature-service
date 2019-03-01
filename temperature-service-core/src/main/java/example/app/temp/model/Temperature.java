@@ -18,13 +18,13 @@ package example.app.temp.model;
 import java.util.Locale;
 import java.util.Optional;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.data.annotation.Transient;
-import org.springframework.util.Assert;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.data.annotation.Transient;
+import org.springframework.util.Assert;
 
 /**
  * The {@link Temperature} class is an Abstract Data Type (ADT) modeling a physical temperature containing
