@@ -22,6 +22,7 @@
     <module>temperature-service-sensor</module>
     <module>temperature-service-server</module>
     <module>temperature-service-tests</module>
+    <module>temperature-caching-examples</module>
   </modules>
 
   <name>Temperature Monitoring and Sensing Service</name>
