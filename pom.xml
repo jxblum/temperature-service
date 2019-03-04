@@ -88,11 +88,11 @@
     <multithreadedtc.version>1.01</multithreadedtc.version>
     <spring-boot-data-gmfire.version>1.0.0.M3</spring-boot-data-gmfire.version>
     <spring-boot-data-geode.version>1.0.0.M3</spring-boot-data-geode.version>
-    <spring-data-releasetrain.version>Lovelace-RELEASE</spring-data-releasetrain.version>
-    <spring-data-geode.version>2.1.0.RELEASE</spring-data-geode.version>
-    <spring-data-gemfire.version>2.1.0.RELEASE</spring-data-gemfire.version>
-    <spring-data-geode-test.version>0.0.1.M4</spring-data-geode-test.version>
-    <spring-data-gemfire-test.version>0.0.1.M4</spring-data-gemfire-test.version>
+    <spring-data-releasetrain.version>Lovelace-SR5</spring-data-releasetrain.version>
+    <spring-data-geode.version>2.1.5.RELEASE</spring-data-geode.version>
+    <spring-data-gemfire.version>2.1.5.RELEASE</spring-data-gemfire.version>
+    <spring-data-geode-test.version>0.0.1.RC1</spring-data-geode-test.version>
+    <spring-data-gemfire-test.version>0.0.1.RC1</spring-data-gemfire-test.version>
     <spring-shell.version>1.2.0.RELEASE</spring-shell.version>
   </properties>
 
