@@ -17,12 +17,12 @@ package example.app.temp.model;
 
 import java.util.UUID;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.gemfire.mapping.annotation.Region;
-
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.gemfire.mapping.annotation.Region;
 
 /**
  * The {@link TemperatureReading} class is an Abstract Data Type (ADT) modeling a temperature reading,
