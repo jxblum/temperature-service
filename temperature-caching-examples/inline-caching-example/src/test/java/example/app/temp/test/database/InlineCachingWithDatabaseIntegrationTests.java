@@ -23,6 +23,8 @@ import org.junit.runner.RunWith;
 
 import org.apache.geode.cache.GemFireCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.gemfire.GemfireTemplate;
@@ -101,7 +103,9 @@ public class InlineCachingWithDatabaseIntegrationTests {
     assertThat(this.temperatureReadingsTemplate.getRegion()).hasSize(2);
   }
 
+  @SpringBootApplication
   @PeerCacheApplication(logLevel = GEMFIRE_LOG_LEVEL)
+  @EntityScan(basePackageClasses = TemperatureReading.class)
   @EnableJpaRepositories(basePackageClasses = TemperatureReadingRepository.class)
   static class GeodeConfiguration {
 
