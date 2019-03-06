@@ -8,7 +8,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.0.5.RELEASE</version>
+    <version>2.0.8.RELEASE</version>
   </parent>
 
   <groupId>io.pivotal.apps</groupId>
@@ -28,7 +28,7 @@
   <description>
     Simple example Spring Boot application to manage temperature sensors and monitor temperature readings.
   </description>
-  <url></url>
+  <url>https://github.com/jxblum/temperature-service</url>
 
   <licenses>
     <license>
