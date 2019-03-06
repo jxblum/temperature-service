@@ -17,9 +17,14 @@ package example.app.temp.model;
 
 import java.util.UUID;
 
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.gemfire.mapping.annotation.Region;
@@ -35,17 +40,21 @@ import org.springframework.data.gemfire.mapping.annotation.Region;
  * @since 1.0.0
  */
 @Data
+@Entity
 @Region("TemperatureReadings")
+@Table(name = "TemperatureReadings")
 @RequiredArgsConstructor(staticName = "of")
+@ToString(of = "id")
 @SuppressWarnings("unused")
 public class TemperatureReading {
 
 	@Id
+	@javax.persistence.Id
 	private String id = UUID.randomUUID().toString();
 
 	private Long timestamp = System.currentTimeMillis();
 
-	@NonNull
+	@NonNull @Embedded
 	private final Temperature temperature;
 
 }

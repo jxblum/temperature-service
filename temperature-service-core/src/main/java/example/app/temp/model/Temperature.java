@@ -18,6 +18,10 @@ package example.app.temp.model;
 import java.util.Locale;
 import java.util.Optional;
 
+import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +37,7 @@ import org.springframework.util.Assert;
  * @author John Blum
  * @since 1.0.0
  */
+@Embeddable
 @EqualsAndHashCode
 @RequiredArgsConstructor(staticName = "of")
 @SuppressWarnings("unused")
@@ -42,19 +47,23 @@ public class Temperature {
 	private final double measurement;
 
 	@Getter
+	@Enumerated(EnumType.STRING)
 	private Scale scale = Scale.getDefault();
 
 	@Transient
+	@javax.persistence.Transient
 	public boolean isBoiling() {
 		return getScale().isBoiling(getMeasurement());
 	}
 
 	@Transient
+	@javax.persistence.Transient
 	public boolean isFreezing() {
 		return getScale().isFreezing(getMeasurement());
 	}
 
 	@Transient
+	@javax.persistence.Transient
 	public boolean isNormal() {
 		return getScale().isNormal(getMeasurement());
 	}
