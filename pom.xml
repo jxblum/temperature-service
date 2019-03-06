@@ -86,6 +86,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <assertj.version>3.11.1</assertj.version>
     <cp-elements.version>1.0.0.M5</cp-elements.version>
+    <javax-persistence.version>2.2</javax-persistence.version>
     <multithreadedtc.version>1.01</multithreadedtc.version>
     <spring-boot-data-gmfire.version>1.0.0.M3</spring-boot-data-gmfire.version>
     <spring-boot-data-geode.version>1.0.0.M3</spring-boot-data-geode.version>
