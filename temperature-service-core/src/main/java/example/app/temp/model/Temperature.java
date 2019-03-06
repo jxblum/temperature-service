@@ -59,7 +59,19 @@ public class Temperature {
 		return getScale().isNormal(getMeasurement());
 	}
 
-	public Temperature using(Scale scale) {
+	public Temperature celsius() {
+		return in(Scale.CELSIUS);
+	}
+
+	public Temperature fahrenheit() {
+		return in(Scale.FAHRENHEIT);
+	}
+
+	public Temperature kelvin() {
+		return in(Scale.KELVIN);
+	}
+
+	public Temperature in(Scale scale) {
 		this.scale = Scale.nullSafeScale(scale).assertValid(getMeasurement());
 		return this;
 	}
