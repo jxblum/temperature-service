@@ -54,10 +54,10 @@ public class InlineCachingWithDatabaseIntegrationTests {
 
   private static final String GEMFIRE_LOG_LEVEL = "warn";
 
+  private static final TemperatureReading ZERO_DEGREES_CELSIUS = TemperatureReading.of(Temperature.of(0).celsius());
+
   @Autowired
   private GemfireTemplate temperatureReadingsTemplate;
-
-  private final TemperatureReading zeroDegreesCelsius = TemperatureReading.of(Temperature.of(0).celsius());
 
   @Autowired
   private TemperatureReadingRepository repository;
@@ -68,39 +68,38 @@ public class InlineCachingWithDatabaseIntegrationTests {
     assertThat(this.repository.count()).isEqualTo(0);
     assertThat(this.temperatureReadingsTemplate.getRegion()).hasSize(0);
 
-    this.repository.save(this.zeroDegreesCelsius);
+    this.repository.save(ZERO_DEGREES_CELSIUS);
 
     assertThat(this.repository.count()).isEqualTo(1);
-    assertThat(this.repository.findById(this.zeroDegreesCelsius.getId()).orElse(null)).isEqualTo(this.zeroDegreesCelsius);
-    assertThat(this.temperatureReadingsTemplate.<String, TemperatureReading>get(this.zeroDegreesCelsius.getId())).isNull();
+    assertThat(this.repository.existsById(ZERO_DEGREES_CELSIUS.getId())).isTrue();
+    assertThat(this.repository.findById(ZERO_DEGREES_CELSIUS.getId()).orElse(null)).isEqualTo(ZERO_DEGREES_CELSIUS);
+    assertThat(this.temperatureReadingsTemplate.<String, TemperatureReading>get(ZERO_DEGREES_CELSIUS.getId())).isNull();
+    assertThat(this.temperatureReadingsTemplate.containsKey(ZERO_DEGREES_CELSIUS.getId())).isFalse();
     assertThat(this.temperatureReadingsTemplate.getRegion()).hasSize(0);
   }
 
   @Test
-  public void cacheWritesDatabase() {
+  public void cacheLoadsFromDatabase() {
+
+    assertThat(this.temperatureReadingsTemplate.containsKey(ZERO_DEGREES_CELSIUS.getId())).isFalse();
+    assertThat(this.temperatureReadingsTemplate.<String, TemperatureReading>get(ZERO_DEGREES_CELSIUS.getId()))
+      .isEqualTo(ZERO_DEGREES_CELSIUS);
+  }
+
+  @Test
+  public void cacheWritesToDatabase() {
 
     TemperatureReading nineElevenDegreesFahrenheit = TemperatureReading.of(Temperature.of(911).fahrenheit());
 
-    assertThat(this.temperatureReadingsTemplate.<String, TemperatureReading>get(nineElevenDegreesFahrenheit.getId())).isNull();
-    assertThat(this.repository.findById(nineElevenDegreesFahrenheit.getId()).orElse(null)).isNull();
+    assertThat(this.temperatureReadingsTemplate.containsKey(nineElevenDegreesFahrenheit.getId())).isFalse();
+    assertThat(this.repository.existsById(nineElevenDegreesFahrenheit.getId())).isFalse();
 
     this.temperatureReadingsTemplate.put(nineElevenDegreesFahrenheit.getId(), nineElevenDegreesFahrenheit);
 
     assertThat(this.temperatureReadingsTemplate.<String, TemperatureReading>get(nineElevenDegreesFahrenheit.getId()))
       .isEqualTo(nineElevenDegreesFahrenheit);
-    assertThat(this.temperatureReadingsTemplate.getRegion()).hasSize(1);
     assertThat(this.repository.findById(nineElevenDegreesFahrenheit.getId()).orElse(null))
       .isEqualTo(nineElevenDegreesFahrenheit);
-    assertThat(this.repository.count()).isEqualTo(2);
-  }
-
-  @Test
-  public void databaseLoadsCache() {
-
-    assertThat(this.temperatureReadingsTemplate.getRegion()).hasSize(1);
-    assertThat(this.temperatureReadingsTemplate.<String, TemperatureReading>get(this.zeroDegreesCelsius.getId()))
-      .isEqualTo(this.zeroDegreesCelsius);
-    assertThat(this.temperatureReadingsTemplate.getRegion()).hasSize(2);
   }
 
   @SpringBootApplication
