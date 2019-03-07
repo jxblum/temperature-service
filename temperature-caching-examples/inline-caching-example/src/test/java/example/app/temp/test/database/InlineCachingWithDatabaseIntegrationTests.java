@@ -38,6 +38,8 @@ import example.app.temp.geode.cache.RepositoryCacheLoader;
 import example.app.temp.geode.cache.RepositoryCacheWriter;
 import example.app.temp.model.Temperature;
 import example.app.temp.model.TemperatureReading;
+import example.app.temp.model.TemperatureSensor;
+import example.app.temp.model.Temperatures;
 import example.app.temp.repo.TemperatureReadingRepository;
 
 /**
@@ -54,7 +56,8 @@ public class InlineCachingWithDatabaseIntegrationTests {
 
   private static final String GEMFIRE_LOG_LEVEL = "warn";
 
-  private static final TemperatureReading ZERO_DEGREES_CELSIUS = TemperatureReading.of(Temperature.of(0).celsius());
+  private static final TemperatureReading ROOM_TEMPERATURE_READING =
+    TemperatureReading.of(Temperatures.ROOM_TEMPERATURE_FAHRENHEIT.getTemperature());
 
   @Autowired
   private GemfireTemplate temperatureReadingsTemplate;
@@ -68,22 +71,23 @@ public class InlineCachingWithDatabaseIntegrationTests {
     assertThat(this.repository.count()).isEqualTo(0);
     assertThat(this.temperatureReadingsTemplate.getRegion()).hasSize(0);
 
-    this.repository.save(ZERO_DEGREES_CELSIUS);
+    this.repository.save(ROOM_TEMPERATURE_READING);
 
     assertThat(this.repository.count()).isEqualTo(1);
-    assertThat(this.repository.existsById(ZERO_DEGREES_CELSIUS.getId())).isTrue();
-    assertThat(this.repository.findById(ZERO_DEGREES_CELSIUS.getId()).orElse(null)).isEqualTo(ZERO_DEGREES_CELSIUS);
-    assertThat(this.temperatureReadingsTemplate.<String, TemperatureReading>get(ZERO_DEGREES_CELSIUS.getId())).isNull();
-    assertThat(this.temperatureReadingsTemplate.containsKey(ZERO_DEGREES_CELSIUS.getId())).isFalse();
+    assertThat(this.repository.existsById(ROOM_TEMPERATURE_READING.getId())).isTrue();
+    assertThat(this.repository.findById(ROOM_TEMPERATURE_READING.getId()).orElse(null)).isEqualTo(
+      ROOM_TEMPERATURE_READING);
+    assertThat(this.temperatureReadingsTemplate.<String, TemperatureReading>get(ROOM_TEMPERATURE_READING.getId())).isNull();
+    assertThat(this.temperatureReadingsTemplate.containsKey(ROOM_TEMPERATURE_READING.getId())).isFalse();
     assertThat(this.temperatureReadingsTemplate.getRegion()).hasSize(0);
   }
 
   @Test
   public void cacheLoadsFromDatabase() {
 
-    assertThat(this.temperatureReadingsTemplate.containsKey(ZERO_DEGREES_CELSIUS.getId())).isFalse();
-    assertThat(this.temperatureReadingsTemplate.<String, TemperatureReading>get(ZERO_DEGREES_CELSIUS.getId()))
-      .isEqualTo(ZERO_DEGREES_CELSIUS);
+    assertThat(this.temperatureReadingsTemplate.containsKey(ROOM_TEMPERATURE_READING.getId())).isFalse();
+    assertThat(this.temperatureReadingsTemplate.<String, TemperatureReading>get(ROOM_TEMPERATURE_READING.getId()))
+      .isEqualTo(ROOM_TEMPERATURE_READING);
   }
 
   @Test
@@ -104,7 +108,7 @@ public class InlineCachingWithDatabaseIntegrationTests {
 
   @SpringBootApplication
   @PeerCacheApplication(logLevel = GEMFIRE_LOG_LEVEL)
-  @EntityScan(basePackageClasses = TemperatureReading.class)
+  @EntityScan(basePackageClasses = TemperatureSensor.class)
   @EnableJpaRepositories(basePackageClasses = TemperatureReadingRepository.class)
   static class GeodeConfiguration {
 
