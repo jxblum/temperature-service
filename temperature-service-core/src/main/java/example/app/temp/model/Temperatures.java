@@ -55,6 +55,10 @@ public enum Temperatures {
 		return this.temperature;
 	}
 
+	public TemperatureReading asReading() {
+		return TemperatureReading.of(getTemperature());
+	}
+
 	@Override
 	public String toString() {
 		return getTemperature().toString();
