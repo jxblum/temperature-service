@@ -15,20 +15,24 @@
  */
 package example.app.temp.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.gemfire.mapping.annotation.Region;
 import org.springframework.data.geo.Point;
+
+import example.app.temp.model.support.TemperatureSensorSupport;
 
 /**
  * The TemperatureSensor class...
@@ -40,22 +44,22 @@ import org.springframework.data.geo.Point;
 @Entity
 @Region("TemperatureSensors")
 @Table(name = "TemperatureSensors")
+@EqualsAndHashCode(callSuper = false)
+@RequiredArgsConstructor(staticName = "create")
+@ToString(of = "name")
 @SuppressWarnings("unused")
-public class TemperatureSensor implements Iterable<TemperatureReading> {
+public class TemperatureSensor extends TemperatureSensorSupport {
 
   @Id
   @javax.persistence.Id
   private Long id;
 
-  @Transient
-  @javax.persistence.Transient
+  @OneToMany
+  private Collection<TemperatureReading> temperatureReadings = new ArrayList<>();
+
   private Point location;
 
-  @OneToMany
-  private Collection<TemperatureReading> temperatureReadings;
+  @NonNull
+  private final String name;
 
-  @Override @SuppressWarnings("all")
-  public Iterator<TemperatureReading> iterator() {
-    return Collections.unmodifiableCollection(this.temperatureReadings).iterator();
-  }
 }
