@@ -18,12 +18,19 @@ package example.app.temp.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -35,31 +42,38 @@ import org.springframework.data.geo.Point;
 import example.app.temp.model.support.TemperatureSensorSupport;
 
 /**
- * The TemperatureSensor class...
+ * {@link TemperatureSensor} is an Abstract Data Type (ADT) modeling a sensor device that measure physical temperatures.
  *
  * @author John Blum
+ * @see javax.persistence.Entity
+ * @see javax.persistence.Table
+ * @see org.springframework.data.gemfire.mapping.annotation.Region
+ * @see example.app.temp.model.support.TemperatureSensorSupport
  * @since 1.0.0
  */
 @Data
 @Entity
 @Region("TemperatureSensors")
-@Table(name = "TemperatureSensors")
+@Table(name = "temperature_sensors")
 @EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor(staticName = "create")
-@ToString(of = "name")
+@ToString
 @SuppressWarnings("unused")
 public class TemperatureSensor extends TemperatureSensorSupport {
 
   @Id
   @javax.persistence.Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToMany
+  @JoinColumn(name = "temp_sensor_id")
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private Collection<TemperatureReading> temperatureReadings = new ArrayList<>();
 
   private Point location;
 
   @NonNull
-  private final String name;
+  private String name;
 
 }
