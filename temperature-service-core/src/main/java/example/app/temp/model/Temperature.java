@@ -15,6 +15,7 @@
  */
 package example.app.temp.model;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -22,8 +23,11 @@ import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import org.apache.commons.lang.StringUtils;
@@ -39,12 +43,13 @@ import org.springframework.util.Assert;
  */
 @Embeddable
 @EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @RequiredArgsConstructor(staticName = "of")
 @SuppressWarnings("unused")
 public class Temperature {
 
-	@Getter
-	private final double measurement;
+	@Getter @NonNull
+	private double measurement;
 
 	@Getter
 	@Enumerated(EnumType.STRING)
@@ -117,6 +122,13 @@ public class Temperature {
 
 		public static Scale nullSafeScale(Scale scale) {
 			return scale != null ? scale : getDefault();
+		}
+
+		public static Optional<Scale> valueOfSymbol(String symbol) {
+
+			return Arrays.stream(values())
+				.filter(scale -> scale.getSymbol().equalsIgnoreCase(symbol))
+				.findFirst();
 		}
 
 		public Scale assertValid(double temperature) {
