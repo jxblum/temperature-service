@@ -17,11 +17,15 @@ package example.app.temp.model;
 
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -42,9 +46,11 @@ import org.springframework.data.gemfire.mapping.annotation.Region;
 @Data
 @Entity
 @Region("TemperatureReadings")
-@Table(name = "TemperatureReadings")
+@Table(name = "temperature_readings")
+@EqualsAndHashCode(of = { "timestamp", "temperature" })
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor(staticName = "of")
-@ToString(of = "id")
+@ToString
 @SuppressWarnings("unused")
 public class TemperatureReading {
 
@@ -52,9 +58,10 @@ public class TemperatureReading {
 	@javax.persistence.Id
 	private String id = UUID.randomUUID().toString();
 
+	@Column(name = "date_time")
 	private Long timestamp = System.currentTimeMillis();
 
-	@NonNull @Embedded
-	private final Temperature temperature;
+	@Embedded @NonNull
+	private Temperature temperature;
 
 }
