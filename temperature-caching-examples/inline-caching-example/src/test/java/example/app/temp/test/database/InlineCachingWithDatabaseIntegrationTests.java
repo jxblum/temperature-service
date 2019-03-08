@@ -28,10 +28,14 @@ import org.apache.geode.cache.GemFireCache;
 import org.cp.elements.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.cassandra.CassandraDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 import org.springframework.data.gemfire.GemfireTemplate;
 import org.springframework.data.gemfire.LocalRegionFactoryBean;
 import org.springframework.data.gemfire.config.annotation.PeerCacheApplication;
@@ -184,16 +188,17 @@ public class InlineCachingWithDatabaseIntegrationTests {
   }
 
   @Profile("database")
-  @SpringBootApplication
+  @SpringBootApplication(exclude = {
+    CassandraAutoConfiguration.class,
+    CassandraDataAutoConfiguration.class
+  })
   @EntityScan(basePackageClasses = TemperatureSensor.class)
   @EnableJpaRepositories(basePackageClasses = TemperatureSensorRepository.class)
   static class DatabaseConfiguration { }
 
-  /*
   @Profile("cassandra")
-  @SpringBootApplication
+  @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
   @EnableCassandraRepositories(basePackageClasses = TemperatureSensorRepository.class)
   static class CassandraConfiguration { }
-  */
 
 }
