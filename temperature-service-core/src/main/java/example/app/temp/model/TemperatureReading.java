@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 import org.springframework.data.gemfire.mapping.annotation.Region;
 
 /**
@@ -47,6 +48,7 @@ import org.springframework.data.gemfire.mapping.annotation.Region;
 @Entity
 @Region("TemperatureReadings")
 @Table(name = "temperature_readings")
+@UserDefinedType("TemperatureReading")
 @EqualsAndHashCode(of = { "timestamp", "temperature" })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor(staticName = "of")
@@ -56,7 +58,7 @@ public class TemperatureReading {
 
 	@Id
 	@javax.persistence.Id
-	private String id = UUID.randomUUID().toString();
+	private UUID id = UUID.randomUUID();
 
 	@Column(name = "date_time")
 	private Long timestamp = System.currentTimeMillis();
