@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
+import org.cp.elements.lang.Identifiable;
 import org.cp.elements.util.ArrayUtils;
 import org.cp.elements.util.CollectionUtils;
 import org.springframework.lang.Nullable;
@@ -29,13 +30,18 @@ import org.springframework.lang.Nullable;
 import example.app.temp.model.TemperatureReading;
 
 /**
- * The TemperatureSensorSupport class...
+ * The {@link TemperatureSensorSupport} class is an abstract base class supporting the implementation
+ * of temperature sensor devices, encapsulating operations on a {@link Collection}
+ * of {@link TemperatureReading TemperatureReadings}.
  *
  * @author John Blum
+ * @see java.lang.Iterable
+ * @see org.cp.elements.lang.Identifiable
+ * @see example.app.temp.model.TemperatureReading
  * @since 1.0.0
  */
-@SuppressWarnings("unchecked")
-public abstract class TemperatureSensorSupport implements Iterable<TemperatureReading> {
+@SuppressWarnings({ "unchecked", "unused" })
+public abstract class TemperatureSensorSupport implements Identifiable<Long>, Iterable<TemperatureReading> {
 
   public abstract Collection<TemperatureReading> getTemperatureReadings();
 
@@ -64,5 +70,9 @@ public abstract class TemperatureSensorSupport implements Iterable<TemperatureRe
       .forEach(this::add);
 
     return (T) this;
+  }
+
+  public int size() {
+    return getTemperatureReadings().size();
   }
 }
