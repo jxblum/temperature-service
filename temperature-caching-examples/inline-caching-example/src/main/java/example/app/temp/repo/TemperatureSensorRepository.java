@@ -31,4 +31,6 @@ import example.app.temp.model.TemperatureSensor;
 @SuppressWarnings("unused")
 public interface TemperatureSensorRepository extends CrudRepository<TemperatureSensor, Long> {
 
+  TemperatureSensor findByName(String name);
+
 }
