@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS temperature_readings (
   id VARCHAR(256) PRIMARY KEY,
   temp_sensor_id BIGINT,
   date_time BIGINT,
-  measurement DECIMAL(10, 2),
+  measurement DECIMAL(10, 1),
   scale VARCHAR(10),
   FOREIGN KEY (temp_sensor_id) REFERENCES temperature_sensors(id)
 );
