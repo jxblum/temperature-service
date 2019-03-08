@@ -88,30 +88,6 @@ public class InlineCachingWithDatabaseIntegrationTests {
   @Autowired
   private TemperatureSensorRepository repository;
 
-  protected void assertEquals(TemperatureSensor actualSensor, TemperatureSensor expectedSensor) {
-
-    assertThat(actualSensor).isNotNull();
-    assertThat(actualSensor.getId()).isEqualTo(expectedSensor.getId());
-    assertThat(actualSensor.getLocation()).isEqualTo(expectedSensor.getLocation());
-    assertThat(actualSensor.getName()).isEqualTo(expectedSensor.getName());
-
-    List<TemperatureReading> actualTemperatureReadings =
-      CollectionUtils.nullSafeCollection(actualSensor.getTemperatureReadings()).stream()
-        .sorted(TemperatureReadingComparator.ORDER_BY_TIME_TEMP_ASC)
-        .collect(Collectors.toList());
-
-    List<TemperatureReading> expectedTemperatureReadings =
-      CollectionUtils.nullSafeCollection(expectedSensor.getTemperatureReadings()).stream()
-        .sorted(TemperatureReadingComparator.ORDER_BY_TIME_TEMP_ASC)
-        .collect(Collectors.toList());
-
-    assertThat(actualTemperatureReadings).hasSize(expectedTemperatureReadings.size());
-
-    for (int index = expectedTemperatureReadings.size(); --index >= 0; ) {
-      assertThat(actualTemperatureReadings.get(index)).isEqualTo(expectedTemperatureReadings.get(index));
-    }
-  }
-
   @Before
   public void setup() {
 
@@ -161,6 +137,30 @@ public class InlineCachingWithDatabaseIntegrationTests {
 
     assertThat(this.temperatureSensorsTemplate.<Long, TemperatureSensor>get(localSensor.getId())).isEqualTo(localSensor);
     assertEquals(this.repository.findById(localSensor.getId()).orElse(null), localSensor);
+  }
+
+  protected void assertEquals(TemperatureSensor actualSensor, TemperatureSensor expectedSensor) {
+
+    assertThat(actualSensor).isNotNull();
+    assertThat(actualSensor.getId()).isEqualTo(expectedSensor.getId());
+    assertThat(actualSensor.getLocation()).isEqualTo(expectedSensor.getLocation());
+    assertThat(actualSensor.getName()).isEqualTo(expectedSensor.getName());
+
+    List<TemperatureReading> actualTemperatureReadings =
+      CollectionUtils.nullSafeCollection(actualSensor.getTemperatureReadings()).stream()
+        .sorted(TemperatureReadingComparator.ORDER_BY_TIME_TEMP_ASC)
+        .collect(Collectors.toList());
+
+    List<TemperatureReading> expectedTemperatureReadings =
+      CollectionUtils.nullSafeCollection(expectedSensor.getTemperatureReadings()).stream()
+        .sorted(TemperatureReadingComparator.ORDER_BY_TIME_TEMP_ASC)
+        .collect(Collectors.toList());
+
+    assertThat(actualTemperatureReadings).hasSize(expectedTemperatureReadings.size());
+
+    for (int index = expectedTemperatureReadings.size(); --index >= 0; ) {
+      assertThat(actualTemperatureReadings.get(index)).isEqualTo(expectedTemperatureReadings.get(index));
+    }
   }
 
   @PeerCacheApplication(logLevel = GEMFIRE_LOG_LEVEL)
