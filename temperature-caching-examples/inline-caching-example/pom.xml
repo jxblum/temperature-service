@@ -14,6 +14,10 @@
   <artifactId>inline-caching-example</artifactId>
   <packaging>jar</packaging>
 
+  <properties>
+    <testcontainers.version>1.10.6</testcontainers.version>
+  </properties>
+
   <dependencies>
 
     <dependency>
@@ -57,6 +61,12 @@
     <dependency>
       <groupId>org.springframework.shell</groupId>
       <artifactId>spring-shell</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <version>${testcontainers.version}</version>
     </dependency>
 
   </dependencies>
