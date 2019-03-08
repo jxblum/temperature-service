@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 import org.springframework.util.Assert;
 
 /**
@@ -45,6 +46,7 @@ import org.springframework.util.Assert;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @RequiredArgsConstructor(staticName = "of")
+@UserDefinedType("Temperature")
 @SuppressWarnings("unused")
 public class Temperature {
 
