@@ -1,0 +1,1 @@
+INSERT INTO temperature_sensors (id, temperature_readings, name) VALUES(1, [{ id: UUID(), timestamp: system.toUnixTimestamp(now()), temperature: { measurement: 72.0, scale: 'FAHRENHEIT' }}, { id: UUID(), timestamp: system.toUnixTimestamp(now()), temperature: { measurement: 0.0, scale: 'CELSIUS' }}], 'A');
