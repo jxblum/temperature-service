@@ -15,6 +15,8 @@
  */
 package example.app.temp.repo;
 
+import java.util.UUID;
+
 import org.springframework.data.repository.CrudRepository;
 
 import example.app.temp.model.TemperatureReading;
@@ -24,12 +26,12 @@ import example.app.temp.model.TemperatureReading;
  * providing basic CRUD and simply query data access operations for {@link TemperatureReading} objects.
  *
  * @author John Blum
- * @see java.lang.String
+ * @see java.util.UUID
  * @see org.springframework.data.repository.CrudRepository
  * @see example.app.temp.model.TemperatureReading
  * @since 1.0.0
  */
 @SuppressWarnings("unused")
-public interface TemperatureReadingRepository extends CrudRepository<TemperatureReading, String> {
+public interface TemperatureReadingRepository extends CrudRepository<TemperatureReading, UUID> {
 
 }
