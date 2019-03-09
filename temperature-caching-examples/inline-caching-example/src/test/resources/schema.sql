@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS temperature_sensors (
 );
 
 CREATE TABLE IF NOT EXISTS temperature_readings (
-  id VARCHAR(256) PRIMARY KEY,
+  id UUID PRIMARY KEY,
   temp_sensor_id BIGINT,
   date_time BIGINT,
   measurement DECIMAL(10, 1),
