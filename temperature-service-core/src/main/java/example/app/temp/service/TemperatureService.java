@@ -16,6 +16,7 @@
 package example.app.temp.service;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,7 @@ public class TemperatureService {
 		return AverageTemperatureFunctionUtils.asTemperatureReading(averageTemperature);
 	}
 
-	public Optional<TemperatureReading> load(String id) {
+	public Optional<TemperatureReading> load(UUID id) {
 		return this.temperatureReadingRepository.findById(id);
 	}
 
