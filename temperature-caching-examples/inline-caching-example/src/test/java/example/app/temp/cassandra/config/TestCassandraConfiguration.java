@@ -41,8 +41,11 @@ import org.springframework.lang.Nullable;
  */
 public abstract class TestCassandraConfiguration extends AbstractCassandraConfiguration {
 
+  private static final boolean CASSANDRA_METRICS_ENABLED = false;
+
   protected static final int CASSANDRA_DEFAULT_PORT = CassandraClusterFactoryBean.DEFAULT_PORT;
 
+  private static final String CASSANDRA_DATA_CQL = "cassandra-data.cql";
   private static final String CASSANDRA_SCHEMA_CQL = "cassandra-schema.cql";
   private static final String CLUSTER_NAME = "TemperatureServiceCluster";
   private static final String KEYSPACE_NAME = "TemperatureService";
@@ -57,12 +60,18 @@ public abstract class TestCassandraConfiguration extends AbstractCassandraConfig
     return KEYSPACE_NAME;
   }
 
+  @Override
+  protected boolean getMetricsEnabled() {
+    return CASSANDRA_METRICS_ENABLED;
+  }
+
   @Override @SuppressWarnings("all")
   protected List<String> getStartupScripts() {
 
     List<String> startupScripts = new ArrayList<>(super.getStartupScripts());
 
     startupScripts.addAll(readLines(new ClassPathResource(CASSANDRA_SCHEMA_CQL)));
+    startupScripts.addAll(readLines(new ClassPathResource(CASSANDRA_DATA_CQL)));
 
     return startupScripts;
   }
