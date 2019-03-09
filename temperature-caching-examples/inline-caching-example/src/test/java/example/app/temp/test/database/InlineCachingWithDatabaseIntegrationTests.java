@@ -42,7 +42,9 @@ import org.springframework.data.gemfire.config.annotation.PeerCacheApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.testcontainers.containers.GenericContainer;
 
+import example.app.temp.cassandra.config.TestCassandraConfiguration;
 import example.app.temp.geode.cache.RepositoryCacheLoader;
 import example.app.temp.geode.cache.RepositoryCacheWriter;
 import example.app.temp.model.Temperature;
@@ -199,6 +201,33 @@ public class InlineCachingWithDatabaseIntegrationTests {
   @Profile("cassandra")
   @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
   @EnableCassandraRepositories(basePackageClasses = TemperatureSensorRepository.class)
-  static class CassandraConfiguration { }
+  static class CassandraConfiguration extends TestCassandraConfiguration {
 
+    private static final String CASSANDRA_DOCKER_IMAGE_NAME = "cassandra:latest";
+
+    @Bean
+    GenericContainer cassandraContainer() {
+
+      GenericContainer cassandraContainer = newCassandraContainer()
+        .withExposedPorts(CASSANDRA_DEFAULT_PORT);
+
+      cassandraContainer.start();
+
+      return cassandraContainer;
+    }
+
+    private GenericContainer newCassandraContainer() {
+      return new GenericContainer(CASSANDRA_DOCKER_IMAGE_NAME);
+    }
+
+    @Override @SuppressWarnings("all")
+    protected String getContactPoints() {
+      return cassandraContainer().getContainerIpAddress();
+    }
+
+    @Override
+    protected int getPort() {
+      return cassandraContainer().getFirstMappedPort();
+    }
+  }
 }
