@@ -27,6 +27,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.datastax.driver.core.DataType.Name;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,6 +38,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.gemfire.mapping.annotation.Region;
 import org.springframework.data.geo.Point;
 
@@ -55,6 +59,7 @@ import example.app.temp.model.support.TemperatureSensorSupport;
 @Entity
 @Region("TemperatureSensors")
 @Table(name = "temperature_sensors")
+@org.springframework.data.cassandra.core.mapping.Table("temperature_sensors")
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor(staticName = "create")
@@ -63,14 +68,17 @@ import example.app.temp.model.support.TemperatureSensorSupport;
 public class TemperatureSensor extends TemperatureSensorSupport {
 
   @Id
+  @PrimaryKey
   @javax.persistence.Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @JoinColumn(name = "temp_sensor_id")
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @org.springframework.data.cassandra.core.mapping.Column("temperature_readings")
   private Collection<TemperatureReading> temperatureReadings = new ArrayList<>();
 
+  @CassandraType(type = Name.UDT, userTypeName = "Point")
   private Point location;
 
   @NonNull
